@@ -1,8 +1,7 @@
 package pl.iTechArt.pages;
 
 import lombok.extern.slf4j.Slf4j;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import pl.iTechArt.utility.BasePage;
@@ -49,6 +48,12 @@ public class LoginPage extends BasePage {
     @FindBy(css = "div[role='alertdialog']")
     private WebElement alert;
 
+    @FindBy(xpath = "//h1[text()='Account Created Successfully']")
+    private WebElement createdAccountHeader;
+
+    @FindBy(id = "login")
+    private WebElement loginButton;
+
     public LoginPage clickOnRegisterButton(){
         registerHereButton.click();
         return this;
@@ -76,16 +81,35 @@ public class LoginPage extends BasePage {
         }
     }
 
+    public LoginPage logInError(String mail, String password) {
+        email.sendKeys(mail);
+        userPassword.sendKeys(password);
+        loginButton.click();
+        return this;
+    }
+
+    public DashboardPage logIn(String mail, String password) {
+        email.sendKeys(mail);
+        userPassword.sendKeys(password);
+        loginButton.click();
+        return new DashboardPage(driver);
+    }
+
     public boolean isAlertVisible() {
         webDriverWait.until(ExpectedConditions.visibilityOf(alert));
         System.out.println(getAlertMess());
-        //log.info(getAlertMess());
         return alert.isDisplayed();
     }
 
     public String getAlertMess() {
+        webDriverWait.until(ExpectedConditions.visibilityOf(alert));
         String alertMess = alert.getText();
         return alertMess;
+    }
+
+    public String getCreatedAccountHeader() {
+        webDriverWait.until(ExpectedConditions.visibilityOf(createdAccountHeader));
+        return createdAccountHeader.getText();
     }
 
 }
