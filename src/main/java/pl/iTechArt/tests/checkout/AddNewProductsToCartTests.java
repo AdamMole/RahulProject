@@ -10,7 +10,8 @@ public class AddNewProductsToCartTests extends BaseTest {
     @Test
     public void addNewProductsToCart() throws IOException {
         launchApplication().logIn("mail12@gmail.com","Test321!")
-                .addToCartSecondApproach();
+                .addToCartTwoItems("ZARA COAT 3", "IPHONE 13 PRO");
+                //.addProductToCart("iphone 13 pro");
     }
 
 }

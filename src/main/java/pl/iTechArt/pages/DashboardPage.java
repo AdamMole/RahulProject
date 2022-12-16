@@ -6,15 +6,14 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import pl.iTechArt.helpers.ElementWait;
 import pl.iTechArt.utility.BasePage;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class DashboardPage extends BasePage {
     public DashboardPage(WebDriver driver) {
         super(driver);
     }
 
-    ElementWait elementWait = new ElementWait();
+    //ElementWait elementWait = new ElementWait(driver);
 
     @FindBy(css = "[class='logo']")
     private WebElement logo;
@@ -31,7 +30,8 @@ public class DashboardPage extends BasePage {
     @FindBy(css = "[class='btn w-10 rounded']")
     private List<WebElement> addToCartButton;
 
-    By productListBy = By.cssSelector(".mb-3");
+    private By productListBy = By.cssSelector(".mb-3");
+    private By addToCartButtonBy = By.cssSelector("[class='btn w-10 rounded']");
 
     public boolean isProductVisible() {
         webDriverWait.until(ExpectedConditions.visibilityOf(logo));
@@ -39,9 +39,24 @@ public class DashboardPage extends BasePage {
     }
 
     public List<WebElement> getProductList() {
-        elementWait.waitForElementToApear(productListBy);
-        //waitForElementToApear(productListBy);
+        //elementWait.waitForElementToApearWait(productListBy);
+        waitForElementToApear(productListBy);
         return products;
+    }
+
+    public WebElement getProductByName(String productName) {
+        WebElement prod = getProductList().stream().filter(p ->
+                        p.findElement(By.cssSelector("b")).getText().equalsIgnoreCase(productName))
+                        .findFirst()
+                        .orElse(null);
+        return prod;
+    }
+
+    public DashboardPage addProductToCart(String productName) {
+        WebElement prod = getProductByName(productName);
+        prod.findElement(addToCartButtonBy).click();
+        waitForElementToDissapear(spinner);
+        return this;
     }
 
     public DashboardPage addToCartFirstApproach() {
@@ -51,9 +66,6 @@ public class DashboardPage extends BasePage {
             String name = productsListNames.get(i).getText();
             if(itemNeededList.contains(name)){
                 //driver.findElements(By.cssSelector("[class='btn w-10 rounded']")).get(i).click();
-                addToCartButton.get(i).click();
-                webDriverWait.until(ExpectedConditions.invisibilityOf(spinner));
-            } else if(itemNeededList.contains(name)){
                 addToCartButton.get(i).click();
                 webDriverWait.until(ExpectedConditions.invisibilityOf(spinner));
             }
@@ -72,7 +84,19 @@ public class DashboardPage extends BasePage {
             prod.findElement(By.cssSelector("[class='btn w-10 rounded']")).click();
             webDriverWait.until(ExpectedConditions.invisibilityOf(spinner));
         }
+        return this;
+    }
 
+    public DashboardPage addToCartTwoItems(String firstProduct, String secondProduct) {
+        waitForElementToApear(logo);
+        List<String> itemNeededList = Arrays.asList(firstProduct,secondProduct);
+        for(int i = 0; i < productsListNames.size(); i++) {
+            String name = productsListNames.get(i).getText();
+            if(itemNeededList.contains(name)){
+                addToCartButton.get(i).click();
+                waitForElementToDissapear(spinner);
+            }
+        }
         return this;
     }
 

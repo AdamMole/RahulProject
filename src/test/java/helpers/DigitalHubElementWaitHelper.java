@@ -1,14 +1,11 @@
-package pl.iTechArt.helpers;
+package helpers;
 
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import pl.iTechArt.helpers.ElementWaitHelper;
 
-import static pl.iTechArt.helpers.PageLoadHelper.waitForPageToBeReady;
-import static pl.iTechArt.helpers.Timeouts.DEFAULT_TIMEOUT;
-import static pl.iTechArt.helpers.Timeouts.TIMEOUT_1_MINUTE;
-import static pl.iTechArt.helpers.WebElementHelper.*;
+import static helpers.PageLoadHelper.waitForPageToBeReady;
+import static helpers.WebElementHelper.*;
 
 
 import java.time.Duration;
@@ -49,7 +46,7 @@ public class DigitalHubElementWaitHelper extends ElementWaitHelper{
     }
 
     public static void waitForAllSpinnersToDisappear() {
-        waitForAllSpinnersToDisappear(DEFAULT_TIMEOUT);
+        waitForAllSpinnersToDisappear(Timeouts.DEFAULT_TIMEOUT);
     }
 
     public static void waitForCuiSpinnerToDisappear() {
@@ -67,7 +64,7 @@ public class DigitalHubElementWaitHelper extends ElementWaitHelper{
     }
 
     public static void waitForPageContainerToLoadAndScrollToTheTop(WebElement pageContainer) {
-        var timeout = TIMEOUT_1_MINUTE;
+        var timeout = Timeouts.TIMEOUT_1_MINUTE;
         waitForAllSpinnersToDisappear(timeout);
         waitForPageToBeReady(pageContainer, timeout);
         scrollToTheTop();

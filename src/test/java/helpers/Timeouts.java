@@ -1,4 +1,4 @@
-package pl.iTechArt.helpers;
+package helpers;
 
 import java.time.Duration;
 

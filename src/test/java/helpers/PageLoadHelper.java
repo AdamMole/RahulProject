@@ -1,6 +1,5 @@
-package pl.iTechArt.helpers;
+package helpers;
 
-import pl.iTechArt.helpers.Timeouts;
 import java.time.Duration;
 import java.util.List;
 import java.util.Objects;

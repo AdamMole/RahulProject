@@ -1,4 +1,4 @@
-package pl.iTechArt.helpers;
+package helpers;
 
 import com.github.dockerjava.api.model.Config;
 import org.openqa.selenium.WebDriver;
@@ -22,8 +22,8 @@ public class WebDriverProvider {
         WEB_DRIVER_THREAD_HOLDER.set(driver);
     }
 
-    public static void setWebDriver(Config config) {
-        WebDriver driver = (new WebDriverFactory()).createDriver(config);
-        setWebDriver(driver);
-    }
+//    public static void setWebDriver(Config config) {
+//        WebDriver driver = (new WebDriverFactory()).createDriver(config);
+//        setWebDriver(driver);
+//    }
 }
