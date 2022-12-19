@@ -21,7 +21,7 @@ public class LoginTests extends BaseTest {
     public void loginCorrectData() throws IOException {
 
         Boolean result = launchApplication().logIn("mail12@gmail.com","Test321!")
-                            .isProductVisible();
+                            .areProductsVisible();
 
         Assert.assertTrue(result);
     }

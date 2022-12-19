@@ -20,6 +20,10 @@ public class ElementWait {
         webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(element));
     }
 
+    public void waitForElementToApear(WebElement element) {
+        webDriverWait.until(ExpectedConditions.visibilityOf(element));
+    }
+
     public void waitForElementToDissapear(WebElement element) {
         webDriverWait.until(ExpectedConditions.invisibilityOf(element));
     }

@@ -9,11 +9,13 @@ import pl.iTechArt.utility.BasePage;
 import java.util.*;
 
 public class DashboardPage extends BasePage {
+
     public DashboardPage(WebDriver driver) {
         super(driver);
+        elementWait = new ElementWait(driver);
     }
 
-    //ElementWait elementWait = new ElementWait(driver);
+    private ElementWait elementWait;
 
     @FindBy(css = "[class='logo']")
     private WebElement logo;
@@ -30,17 +32,31 @@ public class DashboardPage extends BasePage {
     @FindBy(css = "[class='btn w-10 rounded']")
     private List<WebElement> addToCartButton;
 
+    @FindBy(xpath = "(//div[@class='py-2 border-bottom ml-3'])[3]//label")
+    private List<WebElement> categoriesNames;
+
+    @FindBy(xpath = "(//div[@class='py-2 border-bottom ml-3'])[3]/div/input")
+    private List<WebElement> categoriesCheckbox;
+
+    @FindBy(id = "res")
+    private WebElement numberOfProducts;
+
+    @FindBy(css = "[routerlink='/dashboard/cart']")
+    private WebElement cartButton;
+
+    List<String> elements = new ArrayList<>();
+
     private By productListBy = By.cssSelector(".mb-3");
     private By addToCartButtonBy = By.cssSelector("[class='btn w-10 rounded']");
 
-    public boolean isProductVisible() {
+    public boolean areProductsVisible() {
         webDriverWait.until(ExpectedConditions.visibilityOf(logo));
         return logo.isDisplayed();
     }
 
     public List<WebElement> getProductList() {
-        //elementWait.waitForElementToApearWait(productListBy);
-        waitForElementToApear(productListBy);
+        elementWait.waitForElementToApear(productListBy);
+        //waitForElementToApear(productListBy);
         return products;
     }
 
@@ -52,11 +68,22 @@ public class DashboardPage extends BasePage {
         return prod;
     }
 
+    public boolean isProductVisible(String productName) {
+        webDriverWait.until(ExpectedConditions.visibilityOf(logo));
+        Boolean result = productsListNames.stream().anyMatch(p -> p.getText().equalsIgnoreCase(productName));
+        return result;
+    }
+
     public DashboardPage addProductToCart(String productName) {
         WebElement prod = getProductByName(productName);
         prod.findElement(addToCartButtonBy).click();
         waitForElementToDissapear(spinner);
         return this;
+    }
+
+    public CartPage goToCart() {
+        cartButton.click();
+        return new CartPage(driver);
     }
 
     public DashboardPage addToCartFirstApproach() {
@@ -90,14 +117,49 @@ public class DashboardPage extends BasePage {
     public DashboardPage addToCartTwoItems(String firstProduct, String secondProduct) {
         waitForElementToApear(logo);
         List<String> itemNeededList = Arrays.asList(firstProduct,secondProduct);
+        setListOfProductsAddedToCart(itemNeededList);
         for(int i = 0; i < productsListNames.size(); i++) {
             String name = productsListNames.get(i).getText();
             if(itemNeededList.contains(name)){
+                //elements.add(name);
                 addToCartButton.get(i).click();
                 waitForElementToDissapear(spinner);
             }
         }
         return this;
+    }
+
+    private void setListOfProductsAddedToCart(List<String> elements) {
+        this.elements = elements;
+    }
+
+    public List<String> getListOfProductsAddedToCart() {
+        System.out.println("Getter: " + elements);
+        return elements;
+    }
+
+    public String selectCategory(String categoryName) {
+        waitForElementToApear(logo);
+        String category = "";
+        for(int i = 0; i < categoriesNames.size(); i++) {
+            if(categoriesNames.get(i).getText().equalsIgnoreCase(categoryName)) {
+                category = categoriesNames.get(i).getText();
+                categoriesCheckbox.get(i).click();
+            }
+        }
+        return category;
+    }
+
+    public Boolean productsSortedByCategory(String categoryName) {
+        Boolean result = false;
+        if(selectCategory(categoryName).equalsIgnoreCase("electronics")){
+            waitForElementToApear(numberOfProducts);
+            webDriverWait.until(ExpectedConditions.textToBePresentInElement(numberOfProducts,"1"));
+            result = productsListNames.stream().anyMatch(p -> p.getText().equalsIgnoreCase("Iphone 13 pro"));
+        } else {
+            result = productsListNames.stream().anyMatch(p -> p.getText().equalsIgnoreCase("Zara coat 3"));
+        }
+        return result;
     }
 
 }
