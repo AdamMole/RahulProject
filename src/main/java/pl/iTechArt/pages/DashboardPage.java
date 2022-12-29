@@ -44,7 +44,7 @@ public class DashboardPage extends BasePage {
     @FindBy(css = "[routerlink='/dashboard/cart']")
     private WebElement cartButton;
 
-    List<String> elements = new ArrayList<>();
+    private static List<String> elements = new ArrayList<>();
 
     private By productListBy = By.cssSelector(".mb-3");
     private By addToCartButtonBy = By.cssSelector("[class='btn w-10 rounded']");
@@ -83,6 +83,7 @@ public class DashboardPage extends BasePage {
 
     public CartPage goToCart() {
         cartButton.click();
+        System.out.println("Getter gotocart: " + getListOfProductsAddedToCart());
         return new CartPage(driver);
     }
 
@@ -133,7 +134,7 @@ public class DashboardPage extends BasePage {
         this.elements = elements;
     }
 
-    public List<String> getListOfProductsAddedToCart() {
+    public static List<String> getListOfProductsAddedToCart() {
         System.out.println("Getter: " + elements);
         return elements;
     }

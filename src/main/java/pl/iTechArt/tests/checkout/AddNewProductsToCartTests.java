@@ -26,12 +26,13 @@ public class AddNewProductsToCartTests extends BaseTest {
 
     @Test
     public void addNewProductsToCart() throws IOException {
-        launchApplication().logIn("mail12@gmail.com","Test321!")
+        Boolean result = launchApplication().logIn("mail12@gmail.com","Test321!")
                             .addToCartTwoItems("ZARA COAT 3", "IPHONE 13 PRO")
-                            .getListOfProductsAddedToCart();
-                            //.goToCart()
-                            //.checkIfProductsInCartAreCorrect();
-                //.addProductToCart("iphone 13 pro");
+                            //.getListOfProductsAddedToCart();
+                            .goToCart()
+                            .checkIfProductsInCartAreCorrect();
+
+        Assert.assertTrue(result);
     }
 
 }

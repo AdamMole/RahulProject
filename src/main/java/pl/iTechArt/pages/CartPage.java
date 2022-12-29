@@ -6,8 +6,10 @@ import org.openqa.selenium.support.FindBy;
 import pl.iTechArt.utility.BasePage;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CartPage extends BasePage {
+
     public CartPage(WebDriver driver) {
         super(driver);
     }
@@ -20,13 +22,40 @@ public class CartPage extends BasePage {
     @FindBy(css = "li[class='totalRow'] button[type='button']")
     private WebElement checkoutButton;
 
-    public CartPage checkIfProductsInCartAreCorrect() {
+    public boolean checkIfProductsInCartAreCorrect() {
         waitForElementToApear(checkoutButton);
         List<String> products = dashboardPage.getListOfProductsAddedToCart();
         System.out.println("Products from getter: " + products);
-        products.stream().forEach(System.out::println);
-        productList.stream().forEach(System.out::println);
+        //products.stream().forEach(System.out::println);
+        List<String> productListText = productList.stream().map(p -> p.getText()).collect(Collectors.toList());
+        //productListText.forEach(el -> System.out.println(el));
+        //Poniższy zapis do poprawy
+        boolean result = true;
+        for(String product : products){
+            if(productListText.contains(product)) {
+                result = true;
+            }
+        }
+        return result;
+    }
 
-        return this;
+    private boolean checkSizeOfCart() {
+        waitForElementToApear(checkoutButton);
+        List<String> products = dashboardPage.getListOfProductsAddedToCart();
+        System.out.println("Size from getter: " + products.size());
+        List<String> productListText = productList.stream().map(p -> p.getText()).collect(Collectors.toList());
+        System.out.println("Size of elements on page: " + productListText.size());
+        boolean res = false;
+        if(products.size() == productListText.size()) {
+            res = true;
+        }
+        return res;
+    }
+
+    public OrderSummary goToCheckout() {
+        if(checkSizeOfCart()) {
+            checkoutButton.click();
+        }
+        return new OrderSummary(driver);
     }
 }
